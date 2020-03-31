@@ -1,6 +1,6 @@
 # Trxyy's AlternativeApi NodeJS Server Lite
 
-Un serveur de téléchargement pour la librairie java de launcher minecraft __Alternative-Lib__ [[Repo ici]]([https://github.com/TrxyyDev/AlternativeAPI](https://github.com/TrxyyDev/AlternativeAPI)) de Trxyy
+Un serveur de téléchargement pour la librairie java de launcher minecraft __Alternative-Lib__ [Repo ici](https://github.com/TrxyyDev/AlternativeAPI) de Trxyy
 
 Ce serveur de téléchargement à l'avantage d'être plus performant lors du parse des fichiers
 
