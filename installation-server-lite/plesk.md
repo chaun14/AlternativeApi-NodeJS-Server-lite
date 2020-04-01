@@ -13,7 +13,7 @@ Connectez vous sur votre panel plesk et allez sur la page principale
 ![](../.gitbook/assets/1.png)
 
 {% hint style="info" %}
-Si vous n'avez pas la même vue que moi sélectionnez la vue dynamique en haut à droite \(bouton changer de vue\) 
+Si vous n'avez pas la même vue que moi, sélectionnez la vue dynamique en haut à droite \(bouton changer de vue\) 
 {% endhint %}
 
 Nous allons maintenant créer un sous domaine pour le launcheur
@@ -45,4 +45,10 @@ entrez le nom que vous souhaitez et appuyez sur "OK"
 ![](../.gitbook/assets/11.png)
 
 Une fois le contenu extrait, envoyez le sur le serveur via FTP \(avec Winscp par exemple\) ou via le gestionnaire de fichiers de plesk
+
+![Vous vous retrouvez donc avec &#xE7;a](../.gitbook/assets/14.png)
+
+{% hint style="info" %}
+Vous aurez sans doute plus de fichier \(qui finissent en .md\). Ils sont inutiles, pas besoin de les envoyer sur le serveur
+{% endhint %}
 
