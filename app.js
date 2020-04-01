@@ -37,7 +37,7 @@ launcherStatus = "Ok";
 
 
 // quand un launcher get la liste de téléchargement
-app.get('/files/downloads.xml', function(req, res) {
+app.get('/files', function(req, res) {
 
     // déclare quelques variables de fonctionnement
     let files;
@@ -118,12 +118,6 @@ app.get('/status.cfg', function(req, res) {
     res.send(launcherStatus)
 })
 
-
-// pour pas afficher un truc vide moche
-app.get('/files', function(req, res) {
-
-    res.send(`<a href="./downloads.xml">Liste des fichiers</a>`)
-})
 
 
 // oui j'ai pris ce port wtf car c'est le tag discord de trxyy 
