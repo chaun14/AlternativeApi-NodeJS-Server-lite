@@ -16,5 +16,5 @@ Ce serveur de téléchargement à l'avantage d'être plus performant lors du par
 
 **Nodejs** demande un peu plus de configuration que **php** mais reste quand même nettement plus cool 😎
 
-Retrouvez les informations d'installation [ici](https://alterlib-server.chaun14.fr/installation-server-lite/) 
+Retrouvez les informations d'installation [ici](https://alterlib-server.chaun14.fr/installation-server-lite/)  
 
