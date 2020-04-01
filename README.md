@@ -1,3 +1,7 @@
+---
+description: Informations utiles
+---
+
 # README
 
 ## Trxyy's AlternativeApi NodeJS Server Lite
