@@ -121,7 +121,9 @@ app.get('/status.cfg', function(req, res) {
 
 
 // oui j'ai pris ce port wtf car c'est le tag discord de trxyy 
-app.listen(2332)
+let port = (process.env.PORT || 2332)
+app.listen(port)
+
 
 // log informatif de démarrage terminé
 console.log("[STARTING] App started".brightCyan)
