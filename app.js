@@ -42,6 +42,7 @@ app.get('/files', function(req, res) {
     // déclare quelques variables de fonctionnement
     let files;
     let xml;
+    let items;
     let initialTime = Date.now()
 
     // log informatif dans la console
