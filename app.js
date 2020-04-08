@@ -46,7 +46,7 @@ app.get('/files', function(req, res) {
     let initialTime = Date.now()
 
     // log informatif dans la console
-    console.log("[INFO] ".brightBlue + "Ip ".yellow + (req.connection.remoteAddress).magenta + (" à " + req.method + " la liste des fichiers à download").yellow)
+    console.log("[INFO] ".brightBlue + "Ip ".yellow + (req.connection.remoteAddress).magenta + (" has " + req.method + " the list of files to download").yellow)
 
     try {
         items = recursiveReadSync('./files'); // listage des fichiers
@@ -54,7 +54,7 @@ app.get('/files', function(req, res) {
 
     } catch (err) { // on le laisse pas passer les erreur méchantes
         if (err.errno === 34) {
-            res.send('Veuillez créer un dossier nommé files');
+            res.send('Please create a folder named files');
         } else {
             //something unrelated went wrong, rethrow
             throw err;
@@ -92,7 +92,7 @@ app.get('/files', function(req, res) {
     // on get le timestamp final
     let finalTime = Date.now()
         // second log informatif
-    console.log("[INFO] ".brightBlue + `Listage de `.yellow + `${files.length}`.rainbow + ` fichiers en `.yellow + (finalTime - initialTime) + "ms pour ".yellow + (req.connection.remoteAddress).magenta)
+    console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${files.length}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
 
     // debug only
     // console.log("le xml est : "+xml)
