@@ -1,6 +1,6 @@
-const colors = require('colors'); // pour avoir une belle console
+const colors = require('colors'); // to get a nice console
 
-// instant publicité
+// instant advertising
 console.log(" ╔══════════════════════════════════════════════════════════╗".brightCyan)
 console.log(" ║   Trxyy's Alternative-api NodeJs server by chaun14 🐑    ║".brightCyan)
 console.log(" ╚══════════════════════════════════════════════════════════╝".brightCyan)
@@ -11,7 +11,7 @@ const recursiveReadSync = require('recursive-readdir-sync')
 
 const express = require('express')
 const app = express()
-    // les middleware
+    // the middleware
 app.use('/', express.static('public'));
 app.use('/files', express.static('files'));
 
@@ -36,16 +36,16 @@ launcherStatus = "Ok";
 /* ================================================== CODE ==================================================*/
 
 
-// quand un launcher get la liste de téléchargement
+// when a launcher gets the download list
 app.get('/files', function(req, res) {
 
-    // déclare quelques variables de fonctionnement
+    // declaring some operating variables
     let files;
     let xml;
     let items;
     let initialTime = Date.now()
 
-    // log informatif dans la console
+    // information log in the console
     console.log("[INFO] ".brightBlue + "Ip ".yellow + (req.connection.remoteAddress).magenta + (" has " + req.method + " the list of files to download").yellow)
 
     try {
@@ -61,26 +61,26 @@ app.get('/files', function(req, res) {
         }
     }
 
-    files = items // truc un chouilla inutile mais bon
+    files = items // a useless but good thing.
 
 
-    // on énumère les fichiers
+    // we list the files
     for (var i = 0; i < items.length; i++) {
 
-        // on récup le hash md5 du fichier
+        //we get the md5 of the file
         const hash = md5File.sync("./" + items[i])
 
-        // on récup sa taille
+        // we get his size
         const stats = fs.statSync("./" + items[i]);
 
-        // on build l'objet xml (si c'est le premier)
+        // we build the xml object (if it's the first one)
         if (xml == undefined) {
             xml = "<Contents>" +
                 "<Key>" + items[i].slice(6).replace(/\\/g, "/") + "</Key>" +
                 "<Size>" + stats.size + "</Size>" +
                 "<ETag>" + hash + "</ETag>" +
                 "</Contents>"
-        } else { // on build l'objet xml (si c'est pas le premier)
+        } else { // we build the xml object (if it's not the first one)
             xml = xml + "<Contents>" +
                 "<Key>" + items[i].slice(6).replace(/\\/g, "/") + "</Key>" +
                 "<Size>" + stats.size + "</Size>" +
@@ -89,42 +89,42 @@ app.get('/files', function(req, res) {
         }
 
     }
-    // on get le timestamp final
+    // we get the finql timestamp
     let finalTime = Date.now()
-        // second log informatif
+        // second informative log
     console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${files.length}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
 
     // debug only
-    // console.log("le xml est : "+xml)
+    // console.log("the xml is : "+xml)
 
 
 
-    // pour que les navigateur et le launcher voient que c'est du xml
+    // so that the browser and the launcher see that it's xml
     res.set('Content-Type', 'text/xml');
 
-    // on finalise nos balise et on envoie notre objet xml généré
+    // we finalize our tags and send our generated xml object
     res.send('<?xml version="1.0"?>' + "<xml>" + "<ListBucketResult>" + xml + "</ListBucketResult>" + "</xml>")
 
 })
 
 
-// pour ne pas afficher une page vide moche
+// not to display an ugly empty page
 app.get('/', function(req, res) {
 
     res.send(`Trxyy's alternative lib download server by <a href="https://chaun14.fr/">chaun14</a>`)
 })
 
-// gestion de l'activation du launcher
+// management of launcher activation
 app.get('/status.cfg', function(req, res) {
     res.send(launcherStatus)
 })
 
 
 
-// oui j'ai pris ce port wtf car c'est le tag discord de trxyy 
+// yes I took this wtf port because it's trxyy's discord tag 
 let port = (process.env.PORT || 2332)
 app.listen(port)
 
 
-// log informatif de démarrage terminé
+// startup completed information log 
 console.log("[STARTING] App started".brightCyan)
