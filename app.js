@@ -45,7 +45,9 @@ app.get('/files', function(req, res) {
     let items;
     let initialTime = Date.now()
 
+
     // information log in the console
+
     console.log("[INFO] ".brightBlue + "Ip ".yellow + (req.connection.remoteAddress).magenta + (" has " + req.method + " the list of files to download").yellow)
 
     try {
@@ -91,7 +93,9 @@ app.get('/files', function(req, res) {
     }
     // we get the finql timestamp
     let finalTime = Date.now()
+
         // second informative log
+
     console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${files.length}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
 
     // debug only
