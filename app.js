@@ -8,29 +8,14 @@ console.log(" ╚═════════════════════
 const fs = require('fs');
 const md5File = require('md5-file')
 const recursiveReadSync = require('recursive-readdir-sync')
+const config = require('./config');
 
 const express = require('express')
 const app = express()
+
     // the middleware
 app.use('/', express.static('public'));
 app.use('/files', express.static('files'));
-
-
-
-let launcherStatus;
-
-/* ================================================== CONFIG ==================================================*/
-
-// Set status as "Ok" if you want to activate the launcher. If it's something else, the launcher will be disabled.
-
-launcherStatus = "Ok";
-//example: launcherStatus = "Sorry the launcher is under maintenance";
-
-
-
-
-
-
 
 
 /* ================================================== CODE ==================================================*/
@@ -56,10 +41,10 @@ app.get('/files', function(req, res) {
 
     } catch (err) { // on le laisse pas passer les erreur méchantes
         if (err.errno === 34) {
-            res.send('Please create a folder named files');
+            res.status(400).send('Please create a folder named files');
         } else {
             //something unrelated went wrong, rethrow
-            throw err;
+            throw new Error("Error - Something went wrong : " + err);
         }
     }
 
@@ -67,7 +52,7 @@ app.get('/files', function(req, res) {
 
 
     // we list the files
-    for (var i = 0; i < items.length; i++) {
+    for (let i = 0; i < items.length; i++) {
 
         //we get the md5 of the file
         const hash = md5File.sync("./" + items[i])
@@ -92,7 +77,7 @@ app.get('/files', function(req, res) {
 
     }
     // we get the finql timestamp
-    let finalTime = Date.now()
+    const finalTime = Date.now()
 
         // second informative log
 
@@ -109,25 +94,25 @@ app.get('/files', function(req, res) {
     // we finalize our tags and send our generated xml object
     res.send('<?xml version="1.0"?>' + "<xml>" + "<ListBucketResult>" + xml + "</ListBucketResult>" + "</xml>")
 
-})
+});
 
 
 // not to display an ugly empty page
 app.get('/', function(req, res) {
-
     res.send(`Trxyy's alternative lib download server by <a href="https://chaun14.fr/">chaun14</a>`)
-})
+});
 
 // management of launcher activation
 app.get('/status.cfg', function(req, res) {
-    res.send(launcherStatus)
-})
-
+    res.send(config.launcherStatus)
+});
 
 
 // yes I took this wtf port because it's trxyy's discord tag 
 let port = (process.env.PORT || 2332)
-app.listen(port)
+app.listen(port, () => {
+    console.log(`listening on ${port}`)
+});
 
 
 // startup completed information log 
