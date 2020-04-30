@@ -13,7 +13,7 @@ const config = require('./config');
 const express = require('express')
 const app = express()
 
-    // the middleware
+// the middleware
 app.use('/', express.static('public'));
 app.use('/files', express.static('files'));
 
@@ -79,7 +79,7 @@ app.get('/files', function(req, res) {
     // we get the finql timestamp
     const finalTime = Date.now()
 
-        // second informative log
+    // second informative log
 
     console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${files.length}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
 
@@ -111,9 +111,9 @@ app.get('/status.cfg', function(req, res) {
 // yes I took this wtf port because it's trxyy's discord tag 
 let port = (process.env.PORT || 2332)
 app.listen(port, () => {
-    console.log(`listening on ${port}`)
+    console.log(`[`.brightCyan + `INFO`.white + `]`.brightCyan + ` Listening on port `.brightCyan + `${port}`.blue)
 });
 
 
 // startup completed information log 
-console.log("[STARTING] App started".brightCyan)
+console.log(`[`.brightCyan + `INFO`.white + `]`.brightCyan + " App started".brightCyan)
