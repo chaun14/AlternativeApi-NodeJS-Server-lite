@@ -1,9 +1,9 @@
 const colors = require('colors'); // to get a nice console
 
 // instant advertising
-console.log(" ╔══════════════════════════════════════════════════════════╗".brightCyan)
-console.log(" ║   Trxyy's Alternative-api NodeJs server by chaun14 🐑    ║".brightCyan)
-console.log(" ╚══════════════════════════════════════════════════════════╝".brightCyan)
+console.log(" ╔═══════════════════════════════════════════════════════════════╗".brightCyan)
+console.log(" ║   Trxyy's Alternative-api NodeJs server v1.2 by chaun14 🐑    ║".brightCyan)
+console.log(" ╚═══════════════════════════════════════════════════════════════╝".brightCyan)
 
 const fs = require('fs');
 const md5File = require('md5-file')
@@ -16,6 +16,7 @@ const app = express()
 // the middleware
 app.use('/', express.static('public'));
 app.use('/files', express.static('files'));
+app.use('/bootstrap', express.static('bootstrap'));
 
 
 /* ================================================== CODE ==================================================*/
@@ -96,7 +97,6 @@ app.get('/files', function(req, res) {
 
 });
 
-
 // not to display an ugly empty page
 app.get('/', function(req, res) {
     res.send(`Trxyy's alternative lib download server by <a href="https://chaun14.fr/">chaun14</a>`)
@@ -106,6 +106,23 @@ app.get('/', function(req, res) {
 app.get('/status.cfg', function(req, res) {
     res.send(config.launcherStatus)
 });
+
+// give the bootstrap hash to clients
+app.get('/bootstrap/launcher.cfg', function(req, res) {
+    try {
+        let hash = md5File.sync("./bootstrap/launcher.jar")
+        res.set('Content-Type', 'text/cfg');
+        res.send(hash)
+
+        console.log("[INFO] ".brightBlue + `Hashing the bootstrap for `.yellow + (req.connection.remoteAddress).magenta)
+
+    } catch (error) {
+        console.error(error);
+        res.status(500).send("Can't load or hash launcher.jar")
+        console.log("[ERROR] ".brightRed + `Can't load or hash launcher.jar for `.brightRed + (req.connection.remoteAddress).brightRed)
+
+    }
+})
 
 
 // yes I took this wtf port because it's trxyy's discord tag 
