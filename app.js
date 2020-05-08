@@ -2,12 +2,11 @@ const colors = require('colors'); // to get a nice console
 
 // instant advertising
 console.log(" ╔═══════════════════════════════════════════════════════════════╗".brightCyan)
-console.log(" ║   Trxyy's Alternative-api NodeJs server v1.2 by chaun14 🐑    ║".brightCyan)
+console.log(" ║   Trxyy's Alternative-api NodeJs server v2.0 by chaun14 🐑    ║".brightCyan)
 console.log(" ╚═══════════════════════════════════════════════════════════════╝".brightCyan)
 
 const fs = require('fs');
 const md5File = require('md5-file')
-const recursiveReadSync = require('recursive-readdir-sync')
 const config = require('./config');
 const chokidar = require('chokidar');
 
@@ -52,9 +51,6 @@ watcher
     });
 
 
-
-
-
 /* ================================================== Routes ==================================================*/
 
 // when a launcher gets the download list
@@ -81,10 +77,10 @@ app.get('/files', async function(req, res) {
     // we finalize our tags and send our generated xml object
     const finalTime = Date.now()
 
-
+    // info log
     console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${fileList.size}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
 
-
+    // send list to launcher
     res.send('<?xml version="1.0"?>' + "<xml>" + "<ListBucketResult>" + xml + "</ListBucketResult>" + "</xml>")
 
 });
