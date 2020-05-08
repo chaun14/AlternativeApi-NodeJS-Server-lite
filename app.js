@@ -9,6 +9,7 @@ const fs = require('fs');
 const md5File = require('md5-file')
 const recursiveReadSync = require('recursive-readdir-sync')
 const config = require('./config');
+const chokidar = require('chokidar');
 
 const express = require('express')
 const app = express()
@@ -18,81 +19,72 @@ app.use('/', express.static('public'));
 app.use('/files', express.static('files'));
 app.use('/bootstrap', express.static('bootstrap'));
 
+let fileList = new Map()
+const debug = config.debug
 
-/* ================================================== CODE ==================================================*/
+/* ================================================== files watcher ==================================================*/
 
+const watcher = chokidar.watch('./files/', {
+    ignored: /(^|[\/\\])\../, // ignore dotfiles
+    persistent: true
+});
+watcher
+// action when a new file is detected
+    .on('add', async path => {
+        const hash = md5File.sync(path)
+        const stats = fs.statSync(path);
+
+        fileList.set(path, { "hash": hash, "size": stats.size });
+        if (debug) console.log(`File ${path} (${hash}) has been added ${stats.size}`)
+    })
+    // action when a file is changed
+    .on('change', async path => {
+        const hash = md5File.sync(path)
+        const stats = fs.statSync(path);
+
+        fileList.set(path, { "hash": hash, "size": stats.size });
+        if (debug) console.log(`File ${path} has been changed`)
+    })
+    // action when a file is deleted
+    .on('unlink', async path => {
+        fileList.delete(path)
+        if (debug) console.log(`File ${path} has been removed`)
+    });
+
+
+
+
+
+/* ================================================== Routes ==================================================*/
 
 // when a launcher gets the download list
-app.get('/files', function(req, res) {
+app.get('/files', async function(req, res) {
 
-    // declaring some operating variables
-    let files;
-    let xml;
-    let items;
-    let initialTime = Date.now()
+    const initialTime = Date.now()
+    let xml = "";
 
+    // list all Map elements
+    for (var [path, values] of fileList) {
 
-    // information log in the console
-
-    console.log("[INFO] ".brightBlue + "Ip ".yellow + (req.connection.remoteAddress).magenta + (" has " + req.method + " the list of files to download").yellow)
-
-    try {
-        items = recursiveReadSync('./files'); // listage des fichiers
-
-
-    } catch (err) { // on le laisse pas passer les erreur méchantes
-        if (err.errno === 34) {
-            res.status(400).send('Please create a folder named files');
-        } else {
-            //something unrelated went wrong, rethrow
-            throw new Error("Error - Something went wrong : " + err);
-        }
-    }
-
-    files = items // a useless but good thing.
-
-
-    // we list the files
-    for (let i = 0; i < items.length; i++) {
-
-        //we get the md5 of the file
-        const hash = md5File.sync("./" + items[i])
-
-        // we get his size
-        const stats = fs.statSync("./" + items[i]);
-
-        // we build the xml object (if it's the first one)
-        if (xml == undefined) {
-            xml = "<Contents>" +
-                "<Key>" + items[i].slice(6).replace(/\\/g, "/") + "</Key>" +
-                "<Size>" + stats.size + "</Size>" +
-                "<ETag>" + hash + "</ETag>" +
-                "</Contents>"
-        } else { // we build the xml object (if it's not the first one)
-            xml = xml + "<Contents>" +
-                "<Key>" + items[i].slice(6).replace(/\\/g, "/") + "</Key>" +
-                "<Size>" + stats.size + "</Size>" +
-                "<ETag>" + hash + "</ETag>" +
-                "</Contents>"
-        }
+        // builder
+        xml = xml + "<Contents>" +
+            "<Key>" + path.slice(6).replace(/\\/g, "/") + "</Key>" +
+            "<Size>" + values.size + "</Size>" +
+            "<ETag>" + values.hash + "</ETag>" +
+            "</Contents>"
 
     }
-    // we get the finql timestamp
-    const finalTime = Date.now()
-
-    // second informative log
-
-    console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${files.length}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
-
-    // debug only
-    // console.log("the xml is : "+xml)
-
-
 
     // so that the browser and the launcher see that it's xml
     res.set('Content-Type', 'text/xml');
 
     // we finalize our tags and send our generated xml object
+    const finalTime = Date.now()
+
+
+    console.log("[INFO] ".brightBlue + `Listing of `.yellow + `${fileList.size}`.rainbow + ` files in `.yellow + (finalTime - initialTime) + "ms for ".yellow + (req.connection.remoteAddress).magenta)
+
+
     res.send('<?xml version="1.0"?>' + "<xml>" + "<ListBucketResult>" + xml + "</ListBucketResult>" + "</xml>")
 
 });
@@ -110,13 +102,17 @@ app.get('/status.cfg', function(req, res) {
 // give the bootstrap hash to clients
 app.get('/bootstrap/launcher.cfg', function(req, res) {
     try {
+        // get a bootstrap hash
         let hash = md5File.sync("./bootstrap/launcher.jar")
+
+        // give the bootstrap hash
         res.set('Content-Type', 'text/cfg');
         res.send(hash)
 
         console.log("[INFO] ".brightBlue + `Hashing the bootstrap for `.yellow + (req.connection.remoteAddress).magenta)
 
     } catch (error) {
+        // handle errors
         console.error(error);
         res.status(500).send("Can't load or hash launcher.jar")
         console.log("[ERROR] ".brightRed + `Can't load or hash launcher.jar for `.brightRed + (req.connection.remoteAddress).brightRed)

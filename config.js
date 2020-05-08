@@ -4,6 +4,6 @@
 //example: launcherStatus = "Sorry the launcher is under maintenance";
 
 module.exports = {
-    launcherStatus: "Ok"
+    launcherStatus: "Ok",
+    debug: false
 };
-
