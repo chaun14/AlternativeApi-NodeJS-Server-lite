@@ -1,5 +1,5 @@
----
-description: Informations utiles
+# Informations utile
+
 <p align="center">
   <a href="https://opensource.org/licenses/MIT"><img src="https://img.shields.io/github/license/chaun14/AlternativeApi-NodeJS-Server-lite.svg?style=for-the-badge" alt="MIT License"></a>
   <a href="https://github.com/riflowth/AlternativeApi-NodeJS-Server-lite/releases"><img src="https://img.shields.io/github/release/chaun14/AlternativeApi-NodeJS-Server-lite.svg?style=for-the-badge" alt="Release"></a>
@@ -8,10 +8,9 @@ description: Informations utiles
   <a href="https://discord.gg/8suwuu"><img src="https://img.shields.io/discord/509814984801517611.svg?color=blue&label=discord&logo=discord&style=for-the-badge" alt="Join the chat"></a>
 
 </p>
-
 ---
 
-# README
+
 
 ## Trxyy's AlternativeApi NodeJS Server Lite
 
